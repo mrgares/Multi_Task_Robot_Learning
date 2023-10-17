@@ -15,7 +15,7 @@ Example of goal-conditioned autonomous robot learning: https://www.deepmind.com/
 
 Useful Simulations:
 
-Meta World: https://meta-world.github.io/
-Mujoco: https://mujoco.org/
-EARL: https://architsharma97.github.io/earl_benchmark/
-GYM: https://www.gymlibrary.dev/index.html
+1. Meta World: https://meta-world.github.io/
+2. Mujoco: https://mujoco.org/
+3. EARL: https://architsharma97.github.io/earl_benchmark/
+4. GYM: https://www.gymlibrary.dev/index.html
