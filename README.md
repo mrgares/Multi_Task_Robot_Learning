@@ -11,3 +11,11 @@ https://www.youtube.com/playlist?list=PL_iWQOsE6TfXxKgI1GgyV1B_Xa0DxE5eH
 "RND novelty rewards: https://arxiv.org/abs/1810.12894
 
 Example of goal-conditioned autonomous robot learning: https://www.deepmind.com/blog/robocat-a-self-improving-robotic-agent"
+
+
+Useful Simulations:
+
+Meta World: https://meta-world.github.io/
+Mujoco: https://mujoco.org/
+EARL: https://architsharma97.github.io/earl_benchmark/
+GYM: https://www.gymlibrary.dev/index.html
