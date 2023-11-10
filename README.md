@@ -19,3 +19,7 @@ Useful Simulations:
 2. Mujoco: https://mujoco.org/
 3. EARL: https://architsharma97.github.io/earl_benchmark/
 4. GYM: https://www.gymlibrary.dev/index.html
+
+## Project board
+
+The project task board can be find here: https://github.com/users/mrgares/projects/1/views/1
