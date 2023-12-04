@@ -1,0 +1,13 @@
+numpy==1.22
+opencv-python
+jupyter
+matplotlib
+pandas
+pillow
+scipy
+tqdm
+h5py
+ipykernel
+torch-summary
+mujoco
+robosuite
