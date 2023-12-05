@@ -20,11 +20,16 @@ def download_dataset(task: str, dataset_type: str, hdf5_type: str, download_dir:
 
 def extract_trajectory_i(hdf5_object, trajectory_idx):
     """
-    Prints information about a trajectory in the HDF5 file.
+    Prints information about a trajectory in the HDF5 file
+    and extracts the states, goal state, and actions for the desired trajectory.
 
     Args:
         hdf5_object: h5py.File or h5py.Group object
         trajectory_idx (int): index of the trajectory to print
+    Returns:
+        states (np.ndarray): array of states
+        goal_state (np.ndarray): goal state
+        actions (np.ndarray): array of actions
     """
     print(f"Extracting Trajectory {trajectory_idx}:")
     
