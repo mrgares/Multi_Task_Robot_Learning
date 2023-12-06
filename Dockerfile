@@ -37,6 +37,7 @@ RUN apt-get update --fix-missing && DEBIAN_FRONTEND=noninteractive && apt-get in
     xserver-xorg-dev\
     libglfw3-dev\
     patchelf\
+    python3-dev\
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
