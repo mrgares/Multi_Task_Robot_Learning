@@ -81,10 +81,6 @@ model = get_example_model(dataset_path, device=device)
 
 print(model)
 
-"""
-WARNING: This code snippet is only for instructive purposes, and is missing several useful
-         components used during training such as logging and rollout evaluation.
-"""
 def get_data_loader(dataset_path):
     """
     Get a data loader to sample batches of data.

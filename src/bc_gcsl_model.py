@@ -19,8 +19,12 @@ class CustomBCModel(nn.Module):
     def __init__(self, encoder, action_dim):
         super(CustomBCModel, self).__init__()
         self.encoder = encoder
-        self.fc = nn.Linear(128, action_dim)
+        self.fc1 = nn.Linear(128, 1024)
+        self.fc2 = nn.Linear(1024, 1024)
+        self.output = nn.Linear(1024, action_dim)
 
     def forward(self, x, task_id):
         x = self.encoder(x, task_id)
-        return self.fc(x)
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        return self.output(x)

@@ -128,15 +128,15 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         return self.inputs[idx], self.actions[idx]
 
-class CombinedDataset(Dataset):
-    def __init__(self, combined_data):
-        self.combined_data = combined_data
+class CustomDataset(Dataset):
+    def __init__(self, data):
+        self.data = data
 
     def __len__(self):
-        return len(self.combined_data)
+        return len(self.data)
 
     def __getitem__(self, idx):
-        inputs, actions = self.combined_data[idx]
+        inputs, actions = self.data[idx]
         inputs_tensor = torch.tensor(inputs, dtype=torch.float32)
         actions_tensor = torch.tensor(actions, dtype=torch.float32)
         return inputs_tensor, actions_tensor
