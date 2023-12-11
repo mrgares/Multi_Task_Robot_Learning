@@ -149,9 +149,17 @@ def obs_to_input(obs, goal_state, task_id, device):
     # Concatenate the observation, goal state and task id
     input = np.concatenate([end_effector_pos, end_effector_rot, gripper_joint_pos, object, goal_state, [task_id]])
     # convert to tensor
-    input_tensor = torch.tensor([input], dtype=torch.float32).to(device)
+    input_tensor = torch.tensor(np.array([input]), dtype=torch.float32).to(device)
     return input_tensor
 
+def obs_to_state(obs):
+    end_effector_pos = obs['robot0_eef_pos']
+    end_effector_rot = obs['robot0_eef_quat']
+    gripper_joint_pos = obs['robot0_gripper_qpos']
+    object = obs['object']
+    # Concatenate the observation
+    state = np.concatenate([end_effector_pos, end_effector_rot, gripper_joint_pos, object])
+    return state
     
 def custom_run_rollout_and_evaluate(model, env, task_id, horizon, goal_state, device='cpu'):
     obs = env.reset()
@@ -190,3 +198,31 @@ def evaluate_model(model, env, task_id, data_path, horizon, num_rollouts=10, dev
     average_reward = np.mean(cumulative_reward)
     print(f"Average MSE over {num_rollouts} rollouts: {average_mse}, Average Reward: {average_reward}")
     return total_mse, cumulative_reward
+
+def generate_trajectory(model, env, task_id, data_path, horizon=200, selected_goal_ind=None, device='cpu', verbose=False):
+    with h5py.File(data_path, 'r') as hdf5_file:
+        if selected_goal_ind is None:
+            idx = np.random.randint(0, len(hdf5_file["data"]))
+        else:
+            idx = selected_goal_ind
+        _, goal_state, _ = extract_trajectory_i(hdf5_file, trajectory_idx=idx, verbose=verbose)
+    obs = env.reset()
+    done = False
+    step = 0
+    record_trajectory = {'states': [obs_to_state(obs)], 'actions': [], 'goal_state': []}
+    while not done and step < horizon:
+        # Prepare observation for model
+        
+        record_trajectory['goal_state'].append(goal_state)
+        obs_tensor = obs_to_input(obs, goal_state, task_id, device)
+        action = model(obs_tensor, task_id).squeeze(0).cpu().detach().numpy()
+        
+        # Take action in environment
+        obs, reward, done, info = env.step(action)
+        record_trajectory['states'].append(obs_to_state(obs))
+        record_trajectory['actions'].append(action)
+        step += 1
+    # convert to numpy array
+    for key in record_trajectory.keys():
+        record_trajectory[key] = np.array(record_trajectory[key])
+    return record_trajectory
