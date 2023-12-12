@@ -117,16 +117,16 @@ def aggregate_data(hdf5_path, task_id, verbose=False):
             all_actions.append(actions)
         return np.concatenate(all_states, axis=0), np.concatenate(all_actions, axis=0)
 
-class CustomDataset(Dataset):
-    def __init__(self, inputs, actions):
-        self.inputs = torch.tensor(inputs, dtype=torch.float32)
-        self.actions = torch.tensor(actions, dtype=torch.float32)
+# class CustomDataset(Dataset):
+#     def __init__(self, inputs, actions):
+#         self.inputs = torch.tensor(inputs, dtype=torch.float32)
+#         self.actions = torch.tensor(actions, dtype=torch.float32)
 
-    def __len__(self):
-        return len(self.inputs)
+#     def __len__(self):
+#         return len(self.inputs)
 
-    def __getitem__(self, idx):
-        return self.inputs[idx], self.actions[idx]
+#     def __getitem__(self, idx):
+#         return self.inputs[idx], self.actions[idx]
 
 class CustomDataset(Dataset):
     def __init__(self, data):
@@ -210,18 +210,20 @@ def generate_trajectory(model, env, task_id, data_path, horizon=200, selected_go
     done = False
     step = 0
     record_trajectory = {'states': [obs_to_state(obs)], 'actions': [], 'goal_state': []}
-    while not done and step < horizon:
-        # Prepare observation for model
-        
-        record_trajectory['goal_state'].append(goal_state)
-        obs_tensor = obs_to_input(obs, goal_state, task_id, device)
-        action = model(obs_tensor, task_id).squeeze(0).cpu().detach().numpy()
-        
-        # Take action in environment
-        obs, reward, done, info = env.step(action)
-        record_trajectory['states'].append(obs_to_state(obs))
-        record_trajectory['actions'].append(action)
-        step += 1
+    model.eval()
+    with torch.no_grad():
+        while not done and step < horizon:
+            # Prepare observation for model
+            
+            record_trajectory['goal_state'].append(goal_state)
+            obs_tensor = obs_to_input(obs, goal_state, task_id, device)
+            action = model(obs_tensor, task_id).squeeze(0).cpu().detach().numpy()
+            
+            # Take action in environment
+            obs, reward, done, info = env.step(action)
+            record_trajectory['states'].append(obs_to_state(obs))
+            record_trajectory['actions'].append(action)
+            step += 1
     # convert to numpy array
     for key in record_trajectory.keys():
         record_trajectory[key] = np.array(record_trajectory[key])
